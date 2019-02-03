@@ -60,7 +60,7 @@ open class MadCulqui(val token: String) {
 
     companion object {
 
-        private const val URL_CULQUI = "https://api.culqi.com/v2"
+        private const val URL_CULQUI = "https://api.culqi.com/v2/"
 
         @JvmStatic
         fun with(token: String): Builder {
