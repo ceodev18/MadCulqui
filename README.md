@@ -15,17 +15,19 @@ Agrega en el build.gradle del proyecto
   Y agrega la dependencia en el módulo que lo utilizará (build.gradle)
   ```Java
   dependencies {
-	        implementation 'com.github.maddog05:MadCulqui:1.0.1'
+	        implementation 'com.github.maddog05:MadCulqui:1.1'
 	}
  ```
 ## Cómo usarlo
 Tienes las siguientes implementaciones para:
-Java con patrón Builder
+Java
 ```Java
-public static final String TOKEN = "";
+public static final String PUBLIC_KEY = "";
+    public static final String SECRET_KEY = "";
 
     public static void generateToken() {
-        MadCulqui.with(TOKEN)
+        MadCulqui.with(PUBLIC_KEY, SECRET_KEY)
+                .generateTokenRequest()
                 .setCard(new Card.Builder()
                         .number("")
                         .expirationMonth(1)
@@ -33,40 +35,29 @@ public static final String TOKEN = "";
                         .cvv("123")
                         .email("a@a.com")
                         .build())
-                .generateToken(new OnGenerateTokenListener() {
+                .execute(new OnGenerateTokenListener() {
                     @Override
-                    public void onSuccess(@NotNull String token) {
+                    public void onError(@NotNull String errorMessage) {
 
                     }
 
                     @Override
-                    public void onError(@NotNull String errorMessage) {
+                    public void onSuccess(@NotNull String token) {
 
                     }
                 });
     }
 ```
- Y Kotlin en 2 formas, como java 8 o patrón Builder
+ Y Kotlin
 ```Kotlin
-MadCulqui(TOKEN).apply {
-            card = Card().apply {
-                number = ""
-                expirationMonth = 1
-                expirationYear = 2020
-                cvv = "123"
-                email = "a@a.com"
-            }
-        }.generateToken(object : OnGenerateTokenListener {
-            override fun onSuccess(token: String) {
+companion object {
+        const val PUBLIC_KEY = ""
+        const val SECRET_KEY = ""
+    }
 
-            }
-
-            override fun onError(errorMessage: String) {
-
-            }
-        })
-        
-        MadCulqui.with(TOKEN)
+    fun generateToken() {
+        MadCulqui.with(PUBLIC_KEY, SECRET_KEY)
+            .generateTokenRequest()
             .setCard(
                 Card.Builder()
                     .number("")
@@ -75,7 +66,8 @@ MadCulqui(TOKEN).apply {
                     .cvv("123")
                     .email("a@a.com")
                     .build()
-            ).generateToken(object : OnGenerateTokenListener {
+            )
+            .execute(object : OnGenerateTokenListener {
                 override fun onSuccess(token: String) {
 
                 }
@@ -84,6 +76,7 @@ MadCulqui(TOKEN).apply {
 
                 }
             })
+    }
 ```
 
 ## Incidencias y sugerencias
