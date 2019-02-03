@@ -15,7 +15,7 @@ Agrega en el build.gradle del proyecto
   Y agrega la dependencia en el módulo que lo utilizará (build.gradle)
   ```Java
   dependencies {
-	        implementation 'com.github.maddog05:MadCulqui:Tag'
+	        implementation 'com.github.maddog05:MadCulqui:1.0.1'
 	}
  ```
 ## Cómo usarlo
