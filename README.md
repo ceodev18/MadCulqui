@@ -19,6 +19,7 @@ Agrega en el build.gradle del proyecto
 	}
  ```
 ## Cómo usarlo
+Para mas detalle (se irá actualizando) puedes revisar el [Wiki del proyecto](https://github.com/maddog05/MadCulqui/wiki).
 Tienes las siguientes implementaciones para:
 Java
 ```Java
