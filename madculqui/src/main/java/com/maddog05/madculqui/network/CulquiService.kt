@@ -9,4 +9,7 @@ import retrofit2.http.POST
 interface CulquiService {
     @POST("tokens/")
     fun generateToken(@Header("Authorization") authorization: String, @Body body: JsonObject): Call<JsonObject>
+
+    @POST("charges")
+    fun payTransaction(@Header("Authorization") authorization: String, @Body body: JsonObject): Call<JsonObject>
 }

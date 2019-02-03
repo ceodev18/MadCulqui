@@ -1,14 +1,10 @@
 package com.maddog05.madculqui
 
 import android.annotation.SuppressLint
-import com.google.gson.JsonObject
-import com.maddog05.madculqui.callback.OnGenerateTokenListener
-import com.maddog05.madculqui.entity.Card
+import com.maddog05.madculqui.logic.GenerateTokenRequest
+import com.maddog05.madculqui.logic.PayRequest
 import com.maddog05.madculqui.network.CulquiService
 import okhttp3.OkHttpClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.InetAddress
@@ -20,41 +16,17 @@ import javax.net.ssl.SSLSocket
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
 
-open class MadCulqui(val token: String) {
-    var card: Card? = null
+open class MadCulqui(val publicKey: String, val secretKey: String) {
 
-    fun generateToken(listener: OnGenerateTokenListener) {
-        if (card != null) {
-            val body = JsonObject()
-            body.addProperty("card_number", card!!.number)
-            body.addProperty("expiration_month", card!!.expirationMonth)
-            body.addProperty("expiration_year", card!!.expirationYear)
-            body.addProperty("cvv", card!!.cvv)
-            body.addProperty("email", card!!.email)
-
-            val culqui = getServices()
-            culqui.generateToken("Bearer $token", body)
-                .enqueue(object : Callback<JsonObject> {
-                    override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                        if (response.isSuccessful && response.body() != null) {
-                            val elementId = response.body()!!.get("id")
-                            if (elementId != null && elementId.isJsonPrimitive)
-                                listener.onSuccess(elementId.asString)
-                            else
-                                listener.onError("Error in get token from response")
-                        } else
-                            listener.onError("Service response with errorCode ${response.code()}")
-                    }
-
-                    override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                        listener.onError("Error with services")
-                    }
-                })
-        } else
-            listener.onError("Card is empty")
+    fun generateTokenRequest(): GenerateTokenRequest {
+        return GenerateTokenRequest(this)
     }
 
-    private fun getServices(): CulquiService {
+    fun payRequest(): PayRequest {
+        return PayRequest(this)
+    }
+
+    fun getServices(): CulquiService {
         return createRetrofit(URL_CULQUI).create(CulquiService::class.java)
     }
 
@@ -63,23 +35,8 @@ open class MadCulqui(val token: String) {
         private const val URL_CULQUI = "https://api.culqi.com/v2/"
 
         @JvmStatic
-        fun with(token: String): Builder {
-            return Builder(token)
-        }
-    }
-
-    class Builder(val token: String) {
-        private var bCard: Card? = null
-
-        fun setCard(card: Card): Builder {
-            this.bCard = card
-            return this
-        }
-
-        fun generateToken(listener: OnGenerateTokenListener) {
-            MadCulqui(token).apply {
-                card = bCard
-            }.generateToken(listener)
+        fun with(publicKey: String, secretKey: String): MadCulqui {
+            return MadCulqui(publicKey, secretKey)
         }
     }
 

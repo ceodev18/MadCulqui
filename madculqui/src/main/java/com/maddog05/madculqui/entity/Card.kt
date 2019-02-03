@@ -25,7 +25,11 @@ open class Card {
         }
 
         fun expirationYear(expirationYear: Int): Builder {
-            this.bExpirationYear = expirationYear
+            this.bExpirationYear = if (expirationYear > 99) {
+                expirationYear
+            } else {
+                2000 + expirationYear
+            }
             return this
         }
 
