@@ -2,11 +2,76 @@ package com.maddog05.demomadculqui
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import com.maddog05.madculqui.MadCulqui
+import com.maddog05.madculqui.callback.OnGenerateTokenListener
+import com.maddog05.madculqui.callback.OnPayTransactionListener
+import com.maddog05.madculqui.entity.Card
 
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        private const val PUBLIC_KEY = "pk_test_uDB4kd1yrt3BUcnT"
+        private const val SECRET_KEY = "sk_test_xTbfsmTrfeuGuYgi"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        generateToken()
+    }
+
+    private fun generateToken() {
+        MadCulqui.with(PUBLIC_KEY, SECRET_KEY)
+            .generateTokenRequest()
+            .setCard(
+                Card.Builder()
+                    .number("4111111111111111")
+                    .expirationMonth(9)
+                    .expirationYear(2020)
+                    .cvv("123")
+                    .email("a@a.com")
+                    .build()
+            )
+            .execute(object : OnGenerateTokenListener {
+                override fun onSuccess(token: String) {
+                    debugLog("generateToken success")
+                    payTransaction(token)
+
+                }
+
+                override fun onError(errorMessage: String) {
+                    errorLog("generateToken error")
+                    errorLog(errorMessage)
+                }
+            })
+    }
+
+    private fun payTransaction(token: String) {
+        MadCulqui.with(PUBLIC_KEY, SECRET_KEY)
+            .payRequest()
+            .setAmount(12.50)
+            .setCurrencyCode("USD")
+            .setEmail("a@a.com")
+            .setSourceId(token)
+            .execute(object : OnPayTransactionListener {
+                override fun onSuccess(transactionId: String) {
+                    debugLog("payTransaction success")
+                    debugLog("transactionId is $transactionId")
+                }
+
+                override fun onError(errorMessage: String) {
+                    errorLog("payTransaction error")
+                    errorLog(errorMessage)
+                }
+            })
+    }
+
+    private fun debugLog(text: String) {
+        Log.d("#Main", text)
+    }
+
+    private fun errorLog(text: String) {
+        Log.e("#Main", text)
     }
 }
