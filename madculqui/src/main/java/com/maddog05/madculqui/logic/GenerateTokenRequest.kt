@@ -1,6 +1,7 @@
 package com.maddog05.madculqui.logic
 
 import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.maddog05.madculqui.MadCulqui
 import com.maddog05.madculqui.callback.OnGenerateTokenListener
 import com.maddog05.madculqui.entity.Card
@@ -34,8 +35,12 @@ class GenerateTokenRequest(private val madCulqui: MadCulqui) {
                                 listener.onSuccess(elementId.asString)
                             else
                                 listener.onError("Error in get token from response")
-                        } else
-                            listener.onError("Service response with errorCode ${response.code()}")
+                        } else {
+                            val errorBody = JsonParser().parse(response.errorBody()!!.string()).asJsonObject
+                            val errorType = errorBody.get("type").asString
+                            val errorMessage = errorBody.get("merchant_message").asString
+                            listener.onError("${response.code()}: $errorType: $errorMessage")
+                        }
                     }
 
                     override fun onFailure(call: Call<JsonObject>, t: Throwable) {

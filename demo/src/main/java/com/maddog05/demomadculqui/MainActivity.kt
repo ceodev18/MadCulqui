@@ -11,8 +11,8 @@ import com.maddog05.madculqui.entity.Card
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private const val PUBLIC_KEY = "pk_test_uDB4kd1yrt3BUcnT"
-        private const val SECRET_KEY = "sk_test_xTbfsmTrfeuGuYgi"
+        private const val PUBLIC_KEY = "PUBLIC"
+        private const val SECRET_KEY = "SECRET"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun generateToken() {
+        debugLog("generateToken")
         MadCulqui.with(PUBLIC_KEY, SECRET_KEY)
             .generateTokenRequest()
             .setCard(
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
                     .expirationMonth(9)
                     .expirationYear(2020)
                     .cvv("123")
-                    .email("a@a.com")
+                    .email("andree@testing.com")
                     .build()
             )
             .execute(object : OnGenerateTokenListener {
@@ -48,11 +49,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun payTransaction(token: String) {
+        debugLog("payTransaction with token $token")
         MadCulqui.with(PUBLIC_KEY, SECRET_KEY)
             .payRequest()
             .setAmount(12.50)
-            .setCurrencyCode("USD")
-            .setEmail("a@a.com")
+            .setCurrencyCode("PEN")
+            .setEmail("andree@testing.com")
             .setSourceId(token)
             .execute(object : OnPayTransactionListener {
                 override fun onSuccess(transactionId: String) {
