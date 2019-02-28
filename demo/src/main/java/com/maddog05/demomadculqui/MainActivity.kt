@@ -1,79 +1,125 @@
 package com.maddog05.demomadculqui
 
+import android.app.ProgressDialog
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.widget.Toast
 import com.maddog05.madculqui.MadCulqui
 import com.maddog05.madculqui.callback.OnGenerateTokenListener
 import com.maddog05.madculqui.callback.OnPayTransactionListener
 import com.maddog05.madculqui.entity.Card
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-        private const val PUBLIC_KEY = "PUBLIC"
-        private const val SECRET_KEY = "SECRET"
-    }
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        generateToken()
+
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        btn_action_pay.setOnClickListener { actionPay() }
+        progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Procesando...")
+        progressDialog.isIndeterminate = true
+        progressDialog.setCancelable(false)
+        setupDemoData()
     }
 
-    private fun generateToken() {
-        debugLog("generateToken")
-        MadCulqui.with(PUBLIC_KEY, SECRET_KEY)
-            .generateTokenRequest()
-            .setCard(
-                Card.Builder()
-                    .number("4111111111111111")
-                    .expirationMonth(9)
-                    .expirationYear(2020)
-                    .cvv("123")
-                    .email("andree@testing.com")
-                    .build()
-            )
-            .execute(object : OnGenerateTokenListener {
-                override fun onSuccess(token: String) {
-                    debugLog("generateToken success")
-                    payTransaction(token)
-
-                }
-
-                override fun onError(errorMessage: String) {
-                    errorLog("generateToken error")
-                    errorLog(errorMessage)
-                }
-            })
+    private fun setupDemoData() {
+        et_input_key_public.setText("pk_test_uDB4kd1yrt3BUcnT")
+        et_input_key_secret.setText("sk_test_qUkDzQlvMJNIHo1A")
+        et_input_email.setText("andree@testing.com")
+        et_input_card.setText("4111111111111111")
+        et_input_month.setText("9")
+        et_input_year.setText("2020")
+        et_input_cvv.setText("123")
+        et_input_amount.setText("12.50")
+        et_input_currency.setText("PEN")
     }
 
-    private fun payTransaction(token: String) {
+    private fun actionPay() {
+        val keyPublic = et_input_key_public.text.toString()
+        val keySecret = et_input_key_secret.text.toString()
+        val email = et_input_email.text.toString()
+        val card = et_input_card.text.toString()
+        val month = et_input_month.text.toString().toInt()
+        val year = et_input_year.text.toString().toInt()
+        val cvv = et_input_cvv.text.toString()
+        val amount = et_input_amount.text.toString().toDouble()
+        val currency = et_input_currency.text.toString().toUpperCase()
+        if (keyPublic.trim().isEmpty() || keySecret.trim().isEmpty())
+            showToast("API keys are empty")
+        else {
+            progressDialog.show()
+            debugLog("Generating token from card")
+            MadCulqui.with(keyPublic, keySecret)
+                .generateTokenRequest()
+                .setCard(
+                    Card.Builder()
+                        .number(card)
+                        .expirationMonth(month)
+                        .expirationYear(year)
+                        .cvv(cvv)
+                        .email(email)
+                        .build()
+                )
+                .execute(object : OnGenerateTokenListener {
+                    override fun onSuccess(token: String) {
+                        debugLog("generateToken: success")
+                        payTransaction(token, amount, currency)
+                    }
+
+                    override fun onError(errorMessage: String) {
+                        if (progressDialog.isShowing)
+                            progressDialog.dismiss()
+                        errorLog("generateToken: $errorMessage")
+                    }
+                })
+        }
+    }
+
+    private fun payTransaction(token: String, amount: Double, currency: String) {
+        val keyPublic = et_input_key_public.text.toString()
+        val keySecret = et_input_key_secret.text.toString()
+        val email = et_input_email.text.toString()
         debugLog("payTransaction with token $token")
-        MadCulqui.with(PUBLIC_KEY, SECRET_KEY)
+        MadCulqui.with(keyPublic, keySecret)
             .payRequest()
-            .setAmount(12.50)
-            .setCurrencyCode("PEN")
-            .setEmail("andree@testing.com")
+            .setAmount(amount)
+            .setCurrencyCode(currency)
+            .setEmail(email)
             .setSourceId(token)
             .execute(object : OnPayTransactionListener {
                 override fun onSuccess(transactionId: String) {
-                    debugLog("payTransaction success")
-                    debugLog("transactionId is $transactionId")
+                    if (progressDialog.isShowing)
+                        progressDialog.dismiss()
+                    debugLog("payTransaction: success: id is $transactionId")
                 }
 
                 override fun onError(errorMessage: String) {
-                    errorLog("payTransaction error")
-                    errorLog(errorMessage)
+                    if (progressDialog.isShowing)
+                        progressDialog.dismiss()
+                    errorLog("payTransaction: $errorMessage")
                 }
             })
     }
 
     private fun debugLog(text: String) {
+        showToast(text)
         Log.d("#Main", text)
     }
 
     private fun errorLog(text: String) {
+        showToast(text)
         Log.e("#Main", text)
+    }
+
+    private fun showToast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 }
