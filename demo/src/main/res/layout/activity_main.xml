@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="16dp"
-            android:text="PAGAR" />
+            android:text="@string/action_pay" />
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -49,7 +49,7 @@
                     style="@style/TextAppearance.AppCompat.Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="API Keys" />
+                    android:text="@string/title_api_keys" />
 
                 <Space
                     android:layout_width="8dp"
@@ -59,7 +59,7 @@
                     android:id="@+id/et_input_key_public"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Llave pública"
+                    android:hint="@string/input_public_key"
                     android:imeOptions="actionNext"
                     android:inputType="text" />
 
@@ -71,7 +71,7 @@
                     android:id="@+id/et_input_key_secret"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Llave privada"
+                    android:hint="@string/input_secret_key"
                     android:imeOptions="actionNext"
                     android:inputType="text" />
 
@@ -92,7 +92,7 @@
                     style="@style/TextAppearance.AppCompat.Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Información de tarjeta" />
+                    android:text="@string/title_card_info" />
 
                 <Space
                     android:layout_width="8dp"
@@ -102,7 +102,7 @@
                     android:id="@+id/et_input_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Correo electrónico"
+                    android:hint="@string/input_email"
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress" />
 
@@ -114,7 +114,7 @@
                     android:id="@+id/et_input_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Número de tarjeta"
+                    android:hint="@string/input_card_number"
                     android:imeOptions="actionNext"
                     android:inputType="number" />
 
@@ -133,7 +133,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Mes"
+                        android:hint="@string/input_card_month"
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="2" />
@@ -147,7 +147,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Año"
+                        android:hint="@string/input_card_year"
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="4" />
@@ -161,7 +161,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="CVV"
+                        android:hint="@string/input_card_cvv"
                         android:imeOptions="actionNext"
                         android:inputType="number" />
                 </LinearLayout>
@@ -183,7 +183,7 @@
                     style="@style/TextAppearance.AppCompat.Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Monto y moneda" />
+                    android:text="@string/title_amount_currency" />
 
                 <Space
                     android:layout_width="8dp"
@@ -200,7 +200,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Monto"
+                        android:hint="@string/input_amount"
                         android:imeOptions="actionNext"
                         android:inputType="numberDecimal" />
 
@@ -213,7 +213,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Moneda"
+                        android:hint="@string/input_currency"
                         android:imeOptions="actionDone"
                         android:inputType="text"
                         android:maxLength="3" />

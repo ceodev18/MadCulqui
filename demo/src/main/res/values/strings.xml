@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">Culqi Checker</string>
+
+    <string name="action_pay">Pay</string>
+
+    <string name="title_amount_currency">Amount and currency</string>
+    <string name="title_api_keys">API Keys</string>
+    <string name="title_card_info">Card information</string>
+
+    <string name="input_public_key">Public key</string>
+    <string name="input_secret_key">Secret key</string>
+    <string name="input_email">Email</string>
+    <string name="input_card_number">Card number</string>
+    <string name="input_card_month">Month</string>
+    <string name="input_card_year">Year</string>
+    <string name="input_card_cvv">CVV</string>
+    <string name="input_amount">Amount</string>
+    <string name="input_currency">Currency (ISO)</string>
+
+    <string name="loading_simulate_sale">Processing…</string>
+    <string name="action_choose_app">Choose an app</string>
+
 </resources>

@@ -1,10 +1,14 @@
 package com.maddog05.demomadculqui
 
 import android.app.ProgressDialog
+import android.content.Intent
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import com.maddog05.madculqui.MadCulqui
 import com.maddog05.madculqui.callback.OnGenerateTokenListener
@@ -24,10 +28,25 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         btn_action_pay.setOnClickListener { actionPay() }
         progressDialog = ProgressDialog(this)
-        progressDialog.setMessage("Procesando...")
+        progressDialog.setMessage(getString(R.string.loading_simulate_sale))
         progressDialog.isIndeterminate = true
         progressDialog.setCancelable(false)
-        setupDemoData()
+        //setupDemoData()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_main_project_site) {
+            val intent =
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/maddog05/MadCulqui"))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(Intent.createChooser(intent, getString(R.string.action_choose_app)))
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setupDemoData() {
